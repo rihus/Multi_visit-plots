@@ -10,6 +10,67 @@ library(rstatix)
 setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/all_projects_data_work/vdp_analysis/CFNonCF_Bronch")
 # linetypes: 0 = blank, 1 = solid, 2 = dashed, 3 = dotted, 4 = dotdash, 5 = longdash, 6 = twodash
 
+connected_bxp <- function(data_in, x_var, y_var, id = "Subject_id", ylim,
+                          palette = NULL, xlab = "", ylab = NULL) {
+  require(ggpubr)
+  # Check if palette is provided
+  if (is.null(palette) || is.null(ylab)) {
+    palette <- c("#999999", "#555555")
+    ylab <- y_var}
+  
+  # Create the ggpaired plot
+  bxp <- ggpaired(data_in, x = x_var, y = y_var, id = id,
+                  fill = x_var, palette = palette,
+                  width = 0.5, ylim = ylim, line.color = "#000000",
+                  line.size = 0.5, legend = "none", xlab = xlab) +
+    ylab(ylab) +
+    theme(panel.border = element_rect(color = "#000000", fill = NA, linewidth = 1),
+          axis.text = element_text(size = 22, color = "#000000", face = "bold"),
+          axis.title = element_text(size = 22, color = "#000000", face = "bold"),
+          axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1))
+  print(bxp)
+  return(bxp)
+}
+
+calc_pval <- function(data_in, x_var, y_var, tst = "wilcox", paired = TRUE) {
+  formula <- as.formula(paste(y_var, "~", x_var))
+  vis_mean <- aggregate(formula, data_in, mean)
+  print("Mean")
+  print(vis_mean)
+  vis_sd <- aggregate(formula, data_in, sd)
+  print("SD")
+  print(vis_sd)
+  ## Statistical test
+  pval <- NULL
+  if (tst == "wilcox") {
+    pval <- data_in %>%
+      wilcox_test(formula, paired = paired) %>%
+      add_significance()
+  } else if (tst == "ttest") {
+    pval <- data_in %>%
+      t_test(formula, paired = paired) %>%
+      add_significance()
+  } else {
+    print("For tst only Wilcoxon (wilcox) or T-test (ttest) are accepted")
+  }
+  print(pval)
+  return(pval)
+}
+
+calc_add_p <- function(data_in, x_var, y_var, fig_handle, py_pos,
+                       tst = "wilcox", paird = TRUE, addp_eq=FALSE) {
+  p_thresh <- calc_pval(data_in, x_var, y_var, tst, paird)
+  p_thresh <- p_thresh %>% add_xy_position(x = x_var)
+  if (addp_eq == TRUE) {plabel = "p={scales::pvalue(p)}"}
+  else {plabel = "p{scales::pvalue(p)}"}
+  bxp_p <- fig_handle + stat_pvalue_manual(p_thresh, label = plabel,
+                                           y.position = py_pos, label.size = 8,
+                                           bracket.size = 0.8,
+                                           tip.length = 0.03, vjust=-0.35)
+  print(bxp_p)
+  return(bxp_p)
+}
+
 ################################################################################
 # ##Load the data from both CSV files and arrange it to plot
 combined_pfts_cf <- read.csv("./IRC740H_2Dspiral_CF/vdp_hvp_results_August2024_visits/IRC740H_CF_PFTS_all_visits_final.csv")
@@ -19,105 +80,48 @@ df_2visits <- combined_pfts_cf %>%
   group_by(Subject_id) %>%
   filter(all(c("Visit1", "Visit2") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Visit1", "Visit2"))
+  filter(VISIT %in% c("Visit1", "Visit2")) %>%
+  filter(Subject_id != "IRC740H-021") ##Removed because not on modulator therapy
 
 ##Get data for all participants with 3 visits
 df_3visits <- combined_pfts_cf %>%
   group_by(Subject_id) %>%
   filter(all(c("Visit1", "Visit2", "Visit3") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Visit1", "Visit2", "Visit3"))
-
-# ##One visit only participants
-# df_1visist <- combined_spir_data %>%
-#   filter(VISIT %in% c("Visit1", "Visit2")) %>%
-#   group_by(Subject_id) %>%
-#   filter(n() == 2) %>%
-#   ungroup()
+  filter(VISIT %in% c("Visit1", "Visit2", "Visit3")) %>%
+  filter(Subject_id != "IRC740H-021")
 
 ###############################################2 visits
-############# N4-corrected #################
-vis_pFVC_mean <- aggregate(VDP ~  VISIT, df_2visits, mean)
-visVDP_mean
-vis_pFVC_sd <- aggregate(VDP ~  VISIT, df_2visits_N4, sd)
-visVDP_sd
-#Correction       VDP
-#Visit1         9.344125
-#Visit2         7.574875
-#SD
-#Visit1         8.546596
-#Visit2         8.007886
-##Statistical test
-stat.test <- df_2visits_N4 %>%
-  wilcox_test(VDP ~ VISIT , paired = TRUE) %>%
-  add_significance()
-stat.test
-y_label <- expression(bold(VDP[Spiral-N4] * "(%)"))
-# #Box plots with p-values VDP
-vdp_bxp_nop <- ggpaired(df_2visits_N4, x = "VISIT", y = "VDP", fill = "VISIT",
-                              palette = c("#b44582", "#cc79a7"), id = "Subject_id", width = 0.5,
-                              ylim = c(0, 40), line.color = "black", line.size = 0.5,
-                              legend = "none", xlab = "") +
-  ylab(y_label) +
-  geom_point(aes(color = Category), shape = 19, size = 3) +
-  # geom_line(aes(group = paste(VISIT, Category)), color = "#000000", size = 0.5) +
-  scale_color_manual(values = c("#000000", "#009e73")) +
-  theme(panel.border = element_rect(color = "#000000", fill = NA, linewidth = 1),
-        axis.text = element_text(size = 22, color = "#000000", face = "bold"),
-        axis.title = element_text(size = 22, color = "#000000", face = "bold"),
-        axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1))
-vdp_bxp_nop
+y_label <- "% Predicted FVC (%)"
+# #Box plots with p-values
+fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FVC", id = "Subject_id",
+                             c(70, 140), palette = c("coral1", "coral4"),
+                             xlab = "", ylab = "% Predicted FVC (%)") 
+fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FVC", fvc_bxp_nop,
+                        133, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
-stat.test <- stat.test %>% add_xy_position(x = "VISIT")
-vdp_bxp_p <-  vdp_bxp_nop + stat_pvalue_manual(stat.test, label = "P={scales::pvalue(p)}",
-                                                           y.position = 34, label.size = 8, bracket.size = 0.8,
-                                                           tip.length = 0.02, vjust=-0.35)
-print(vdp_bxp_p)
+fev1_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1", id = "Subject_id",
+                             c(70, 140), palette = c("chocolate1", "chocolate4"),
+                             xlab = "", ylab = "% Predicted FEV1 (%)") 
+fev1_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1", fev1_bxp_nop,
+                        133, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
-# Save the plot as a png file in the specified directory
-ggsave("./zR_plots_4ppr/vdp_N4_2visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 4.5, height = 3.7, dpi = 300)
-ggsave("./zR_plots_4ppr/vdp_N4_2visits_cbxp_p.png", plot = vdp_bxp_p, width = 4.5, height = 3.7, dpi = 300)
-############ FA-corrected ##################
-visVDP_mean <- aggregate(VDP ~  VISIT, df_2visits_FA, mean)
-visVDP_mean
-visVDP_sd <- aggregate(VDP ~  VISIT, df_2visits_FA, sd)
-visVDP_sd
-#Correction       VDP
-#Visit1         7.718083
-#Visit2         6.471625
-#SD
-#Visit1         7.539007
-#Visit2         6.944800
-##Statistical test
-stat.test <- df_2visits_FA %>%
-  wilcox_test(VDP ~ VISIT , paired = TRUE) %>%
-  add_significance()
-stat.test
-y_label <- expression(bold(VDP[Spiral-FA] * "(%)"))
-# #Box plots with p-values VDP
-vdp_bxp_nop <- ggpaired(df_2visits_FA, x = "VISIT", y = "VDP", fill = "VISIT",
-                        palette = c("#004166", "#0072b2"), id = "Subject_id", width = 0.5,
-                        ylim = c(0, 40), line.color = "black", line.size = 0.5,
-                        legend = "none", xlab = "") + ##
-  ylab(y_label) +
-  geom_point(aes(color = Category), shape = 19, size = 3) +
-  # geom_line(aes(group = paste(VISIT, Category)), color = "#000000", size = 0.5) +
-  scale_color_manual(values = c("#000000", "#009e73")) +
-  theme(panel.border = element_rect(color = "#000000", fill = NA, linewidth = 1),
-        axis.text = element_text(size = 22, color = "#000000", face = "bold"),
-        axis.title = element_text(size = 22, color = "#000000", face = "bold"),
-        axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1))
-vdp_bxp_nop
+r_fev1fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1_FVC", id = "Subject_id",
+                              c(70, 120), palette = c("indianred1", "indianred4"),
+                              xlab = "", ylab = "% Predicted FEV1/FVC (%)") 
+r_fev1fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1_FVC", r_fev1fvc_bxp_nop,
+                         114, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
-stat.test <- stat.test %>% add_xy_position(x = "VISIT")
-vdp_bxp_p <-  vdp_bxp_nop + stat_pvalue_manual(stat.test, label = "P={scales::pvalue(p)}",
-                                               y.position = 34, label.size = 8, bracket.size = 0.8,
-                                               tip.length = 0.02, vjust=-0.35)
-print(vdp_bxp_p)
+# Save the plots as a png file in the specified directory
+ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_nop.png", plot = fvc_bxp_nop, width = 5.9, height = 4.3, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_p.png", plot = fvc_bxp_p, width = 5.9, height = 4.3, dpi = 300)
 
-# Save the plot as a png file in the specified directory
-ggsave("./zR_plots_4ppr/vdp_FA_2visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 4.5, height = 3.7, dpi = 300)
-ggsave("./zR_plots_4ppr/vdp_FA_2visits_cbxp_p.png", plot = vdp_bxp_p, width = 4.5, height = 3.7, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_nop.png", plot = fev1_bxp_nop, width = 5.9, height = 4.3, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_p.png", plot = fev1_bxp_p, width = 5.9, height = 4.3, dpi = 300)
+
+ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_nop.png", plot = r_fev1fvc_bxp_nop, width = 6, height = 4.6, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_p.png", plot = r_fev1fvc_bxp_p, width = 6, height = 4.6, dpi = 300)
+
 
 ###############################################Both 2 and 3 visits
 df_2o3_visits <- combined_spir_data %>%
