@@ -24,6 +24,7 @@ connected_bxp <- function(data_in, x_var, y_var, id = "Subject_id", ylim,
                   width = 0.5, ylim = ylim, line.color = "#000000",
                   line.size = 0.5, legend = "none", xlab = xlab) +
     ylab(ylab) +
+    geom_point(shape = 19, size = 3) +
     theme(panel.border = element_rect(color = "#000000", fill = NA, linewidth = 1),
           axis.text = element_text(size = 22, color = "#000000", face = "bold"),
           axis.title = element_text(size = 22, color = "#000000", face = "bold"),
@@ -61,12 +62,12 @@ calc_add_p <- function(data_in, x_var, y_var, fig_handle, py_pos,
                        tst = "wilcox", paird = TRUE, addp_eq=FALSE) {
   p_thresh <- calc_pval(data_in, x_var, y_var, tst, paird)
   p_thresh <- p_thresh %>% add_xy_position(x = x_var)
-  if (addp_eq == TRUE) {plabel = "p={scales::pvalue(p)}"}
-  else {plabel = "p{scales::pvalue(p)}"}
+  if (addp_eq == TRUE) {plabel = "P={scales::pvalue(p)}"}
+  else {plabel = "P{scales::pvalue(p)}"}
   bxp_p <- fig_handle + stat_pvalue_manual(p_thresh, label = plabel,
                                            y.position = py_pos, label.size = 8,
                                            bracket.size = 0.8,
-                                           tip.length = 0.03, vjust=-0.35)
+                                           tip.length = 0.03, vjust=-0.15)
   print(bxp_p)
   return(bxp_p)
 }
@@ -81,7 +82,8 @@ df_2visits <- combined_pfts_cf %>%
   filter(all(c("Visit1", "Visit2") %in% VISIT)) %>%
   ungroup() %>%
   filter(VISIT %in% c("Visit1", "Visit2")) %>%
-  filter(Subject_id != "IRC740H-021") ##Removed because not on modulator therapy
+  filter(Subject_id != "IRC740H-021") %>%  ##Removed: Not on modulator therapy
+  filter(Subject_id != "IRC740H-024")      ##Removed: Modulator therapy status unknown
 
 ##Get data for all participants with 3 visits
 df_3visits <- combined_pfts_cf %>%
@@ -92,36 +94,43 @@ df_3visits <- combined_pfts_cf %>%
   filter(Subject_id != "IRC740H-021")
 
 ###############################################2 visits
-y_label <- "% Predicted FVC (%)"
 # #Box plots with p-values
 fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FVC", id = "Subject_id",
                              c(70, 140), palette = c("coral1", "coral4"),
-                             xlab = "", ylab = "% Predicted FVC (%)") 
+                             xlab = "", ylab = "% Pred FVC (%)") 
 fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FVC", fvc_bxp_nop,
-                        133, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
+                        135, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 fev1_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1", id = "Subject_id",
                              c(70, 140), palette = c("chocolate1", "chocolate4"),
-                             xlab = "", ylab = "% Predicted FEV1 (%)") 
+                             xlab = "", ylab = "% Pred FEV1 (%)") 
 fev1_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1", fev1_bxp_nop,
-                        133, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
+                        135, tst = "wilcox", paird = TRUE, addp_eq=FALSE)
 
 r_fev1fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1_FVC", id = "Subject_id",
                               c(70, 120), palette = c("indianred1", "indianred4"),
-                              xlab = "", ylab = "% Predicted FEV1/FVC (%)") 
+                              xlab = "", ylab = "% Pred FEV1/FVC (%)")
 r_fev1fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1_FVC", r_fev1fvc_bxp_nop,
                          114, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
+r_fef2575_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEF25_75", id = "Subject_id",
+                                   c(0, 200), palette = c("pink1", "pink4"),
+                                   xlab = "", ylab = "% Pred FEF25-75 (%)") 
+r_fef2575_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEF25_75", r_fef2575_bxp_nop,
+                              180, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
+
 # Save the plots as a png file in the specified directory
-ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_nop.png", plot = fvc_bxp_nop, width = 5.9, height = 4.3, dpi = 300)
-ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_p.png", plot = fvc_bxp_p, width = 5.9, height = 4.3, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_nop.png", plot = fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_p.png", plot = fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
-ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_nop.png", plot = fev1_bxp_nop, width = 5.9, height = 4.3, dpi = 300)
-ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_p.png", plot = fev1_bxp_p, width = 5.9, height = 4.3, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_nop.png", plot = fev1_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_p.png", plot = fev1_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
-ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_nop.png", plot = r_fev1fvc_bxp_nop, width = 6, height = 4.6, dpi = 300)
-ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_p.png", plot = r_fev1fvc_bxp_p, width = 6, height = 4.6, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_nop.png", plot = r_fev1fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_p.png", plot = r_fev1fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
+ggsave("./zR_plots_4ppr/pfts_fef2575_ratio_2visits_cbxp_nop.png", plot = r_fef2575_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/pfts_fef2575_ratio_2visits_cbxp_p.png", plot = r_fef2575_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
 ###############################################Both 2 and 3 visits
 df_2o3_visits <- combined_spir_data %>%
