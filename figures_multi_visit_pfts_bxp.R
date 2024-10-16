@@ -79,58 +79,58 @@ combined_pfts_cf <- read.csv("./IRC740H_2Dspiral_CF/vdp_hvp_results_August2024_v
 ##Get data for all participants with 2 visits
 df_2visits <- combined_pfts_cf %>%
   group_by(Subject_id) %>%
-  filter(all(c("Visit1", "Visit2") %in% VISIT)) %>%
+  filter(all(c("Baseline", "year1") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Visit1", "Visit2")) %>%
+  filter(VISIT %in% c("Baseline", "year1")) %>%
   filter(Subject_id != "IRC740H-021") %>%  ##Removed: Not on modulator therapy
   filter(Subject_id != "IRC740H-024")      ##Removed: Modulator therapy status unknown
 
 ##Get data for all participants with 3 visits
 df_3visits <- combined_pfts_cf %>%
   group_by(Subject_id) %>%
-  filter(all(c("Visit1", "Visit2", "Visit3") %in% VISIT)) %>%
+  filter(all(c("Baseline", "year1", "year2") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Visit1", "Visit2", "Visit3")) %>%
+  filter(VISIT %in% c("Baseline", "year1", "year2")) %>%
   filter(Subject_id != "IRC740H-021")
 
 ###############################################2 visits
 # #Box plots with p-values
 fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FVC", id = "Subject_id",
-                             c(70, 140), palette = c("coral1", "coral4"),
-                             xlab = "", ylab = "% Pred FVC (%)") 
+                             c(70, 150), palette = c("coral4", "coral1"),
+                             xlab = "", ylab = "Pred FVC (%)")
 fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FVC", fvc_bxp_nop,
-                        135, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
+                        140, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 fev1_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1", id = "Subject_id",
-                             c(70, 140), palette = c("chocolate1", "chocolate4"),
-                             xlab = "", ylab = "% Pred FEV1 (%)") 
+                             c(70, 150), palette = c("chocolate4", "chocolate1"),
+                             xlab = "", ylab = "Pred FEV1 (%)")
 fev1_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1", fev1_bxp_nop,
-                        135, tst = "wilcox", paird = TRUE, addp_eq=FALSE)
+                        140, tst = "wilcox", paird = TRUE, addp_eq=FALSE)
 
 r_fev1fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1_FVC", id = "Subject_id",
-                              c(70, 120), palette = c("indianred1", "indianred4"),
-                              xlab = "", ylab = "% Pred FEV1/FVC (%)")
+                              c(70, 130), palette = c("indianred4", "indianred1"),
+                              xlab = "", ylab = "Pred FEV1/FVC (%)")
 r_fev1fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1_FVC", r_fev1fvc_bxp_nop,
-                         114, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
+                         120, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 r_fef2575_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEF25_75", id = "Subject_id",
-                                   c(0, 200), palette = c("pink1", "pink4"),
-                                   xlab = "", ylab = "% Pred FEF25-75 (%)") 
+                                   c(0, 210), palette = c("pink4", "pink1"),
+                                   xlab = "", ylab = "Pred FEF25-75 (%)") 
 r_fef2575_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEF25_75", r_fef2575_bxp_nop,
-                              180, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
+                              190, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 # Save the plots as a png file in the specified directory
-ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_nop.png", plot = fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/pfts_fvc_2visits_cbxp_p.png", plot = fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fvc_2visits_cbxp_nop.png", plot = fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fvc_2visits_cbxp_p.png", plot = fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
-ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_nop.png", plot = fev1_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/pfts_fev1_2visits_cbxp_p.png", plot = fev1_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1_2visits_cbxp_nop.png", plot = fev1_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1_2visits_cbxp_p.png", plot = fev1_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
-ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_nop.png", plot = r_fev1fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/pfts_fev1fvc_ratio_2visits_cbxp_p.png", plot = r_fev1fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1fvc_ratio_2visits_cbxp_nop.png", plot = r_fev1fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1fvc_ratio_2visits_cbxp_p.png", plot = r_fev1fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
-ggsave("./zR_plots_4ppr/pfts_fef2575_ratio_2visits_cbxp_nop.png", plot = r_fef2575_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/pfts_fef2575_ratio_2visits_cbxp_p.png", plot = r_fef2575_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fef2575_ratio_2visits_cbxp_nop.png", plot = r_fef2575_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fef2575_ratio_2visits_cbxp_p.png", plot = r_fef2575_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
 ###############################################Both 2 and 3 visits
 df_2o3_visits <- combined_spir_data %>%
