@@ -82,9 +82,9 @@ combined_spir_data <- rbind(transform(N4corr_spir_cf, Correction = "N4", Categor
 ##Get data for all participants with 2 visits
 vdp_2visits <- combined_spir_data %>%
   group_by(Subject_id) %>%
-  filter(all(c("Baseline", "year1") %in% VISIT)) %>%
+  filter(all(c("Baseline", "Year 1") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Baseline", "year1")) %>%
+  filter(VISIT %in% c("Baseline", "Year 1")) %>%
   filter(Subject_id != "IRC740H-021") %>%  ##Removed: Not on modulator therapy
   filter(Subject_id != "IRC740H-024")      ##Removed: Modulator therapy status unknown
 
@@ -95,9 +95,9 @@ vdp_2visits_FA <- vdp_2visits[vdp_2visits$Correction == "FA", ]
 ##Get data for all participants with 3 visits
 vdp_3visits <- combined_spir_data %>%
   group_by(Subject_id) %>%
-  filter(all(c("Baseline", "year1", "year2") %in% VISIT)) %>%
+  filter(all(c("Baseline", "Year 1", "Year 2") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Baseline", "year1", "year2")) %>%
+  filter(VISIT %in% c("Baseline", "Year 1", "Year 2")) %>%
   filter(Subject_id != "IRC740H-021")
 
 vdp_3visits_N4 <- vdp_3visits[vdp_3visits$Correction == "N4", ]
@@ -105,7 +105,7 @@ vdp_3visits_FA <- vdp_3visits[vdp_3visits$Correction == "FA", ]
 
 # ##One visit only participants
 # df_1visist <- combined_spir_data %>%
-#   filter(VISIT %in% c("Baseline", "year1")) %>%
+#   filter(VISIT %in% c("Baseline", "Year 1")) %>%
 #   group_by(Subject_id) %>%
 #   filter(n() == 2) %>%
 #   ungroup()
