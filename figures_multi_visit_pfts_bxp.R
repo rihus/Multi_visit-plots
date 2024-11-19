@@ -82,8 +82,8 @@ df_2visits <- combined_pfts_cf %>%
   filter(all(c("Baseline", "Year 1") %in% VISIT)) %>%
   ungroup() %>%
   filter(VISIT %in% c("Baseline", "Year 1")) %>%
-  filter(Subject_id != "IRC740H-021") %>%  ##Removed: Not on modulator therapy
-  filter(Subject_id != "IRC740H-024")      ##Removed: Modulator therapy status unknown
+  filter(Subject_id != "IRC740H-021") #%>%  ##Removed: Not on modulator therapy
+ # filter(Subject_id != "IRC740H-024")      ##Removed: Modulator therapy status unknown
 
 ##Get data for all participants with 3 visits
 df_3visits <- combined_pfts_cf %>%
@@ -97,15 +97,15 @@ df_3visits <- combined_pfts_cf %>%
 # #Box plots with p-values
 fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FVC", id = "Subject_id",
                              c(70, 150), palette = c("coral4", "coral1"),
-                             xlab = "", ylab = "ppFVC (%)")
+                             xlab = "", ylab = "%Pred FVC (%)")
 fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FVC", fvc_bxp_nop,
                         140, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 fev1_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1", id = "Subject_id",
                              c(70, 150), palette = c("chocolate4", "chocolate1"),
-                             xlab = "", ylab = "ppFEV1 (%)")
+                             xlab = "", ylab = "%Pred FEV1 (%)")
 fev1_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1", fev1_bxp_nop,
-                        140, tst = "wilcox", paird = TRUE, addp_eq=FALSE)
+                        140, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 r_fev1fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1_FVC", id = "Subject_id",
                               c(70, 130), palette = c("indianred4", "indianred1"),
