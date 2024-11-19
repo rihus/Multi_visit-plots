@@ -111,10 +111,10 @@ vdp_3visits_FA <- vdp_3visits[vdp_3visits$Correction == "FA", ]
 #   ungroup()
 
 ###############################################2 visits
-############# N4-corrected #################
+############# N4-corrected ################# expression(bold(VDP[N4] * "(%)"))
 vdp_n4_bxp_nop <- connected_bxp(vdp_2visits_N4, "VISIT", "VDP", id = "Subject_id",
                              c(0, 35), palette = c("#b44582", "#cc79a7"),
-                             xlab = "", ylab = expression(bold(VDP[N4] * "(%)")))
+                             xlab = "", ylab = "VDP (%)")
 vdp_n4_bxp_p <- calc_add_p(vdp_2visits_N4, "VISIT", "VDP", vdp_n4_bxp_nop,
                         30, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
