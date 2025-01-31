@@ -14,6 +14,11 @@ setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/Confs_Courses_talks_pprs")
 # ##Load the data from both CSV files and arrange it to plot
 data <- read.csv("./Riaz_CF_multi_visit_ppr/IRC740H_N4VDP_PFTs_2visits.csv")
 
+# Age
+age_test <- wilcox.test(data$Age_scan1[[Sex=="M"]],
+                        data$Age_scan1[[Sex=="F"]], paired = TRUE)
+fe1_p_value <- fe1_test$p.value
+
 # FEV1
 fe1_test <- wilcox.test(data$FEV1_B, data$FEV1_Y1, paired = TRUE)
 fe1_p_value <- fe1_test$p.value
@@ -62,5 +67,25 @@ cat("VDP p-value:", vdp_p_value, "\n")
 cat("FVC p-value:", fvc_p_value, "\n")
 cat("FEV1/FVC p-value:", fev1_fvc_p_value, "\n")
 
+# Reshape the data to long format for easier plotting
+data_long <- data %>%
+  pivot_longer(cols = c(Age_scan1, VDP_Diff), 
+               names_to = "Parameter", 
+               values_to = "Value")
 
+# Create boxplots for each parameter
+ggplot(data_long, aes(x = Sex, y = Value, fill = Sex)) +
+  geom_boxplot() +
+  stat_compare_means(aes(group = Sex), 
+                     method = "wilcox.test", 
+                     label = "p.format", 
+                     comparisons = list(c("M", "F")), 
+                     label.y.npc = "top") +
+  facet_wrap(~ Parameter, scales = "free_y") + # Create separate plots for each parameter
+  labs(title = "Comparison of Parameters by Sex",
+       x = "Sex",
+       y = "Value") +
+  scale_y_continuous(expand = expansion(mult = 0.5)) +
+  theme_bw() +
+  theme(legend.position = "none")
 
