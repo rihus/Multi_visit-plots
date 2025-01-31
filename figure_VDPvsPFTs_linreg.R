@@ -46,9 +46,9 @@ linreg_plt <- function(df_in, x_in, y_in, y_label, x_label, x_lim = c(0, 40),
   # Add correlation coefficient and equation to the plot
   linreg_txt <- linreg + ggpubr::stat_cor(p.accuracy = 0.001, method = corrltn_method,
                      aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~")),
-                     label.x = 0.3*max(df_in[[x_in]]), label.y = 0.98*max(df_in[[y_in]]), size = 6) # +
-    # annotate("text", x = 0.8*max(df_in[[x_in]]), y = 0.92*max(df_in[[y_in]]),
-    #          label = fit_eq, color = "#000000", size = 6, parse = TRUE)
+                     label.x = 0.3*max(df_in[[x_in]]), label.y = 0.98*max(df_in[[y_in]]), size = 6) +
+    annotate("text", x = 0.65*max(df_in[[x_in]]), y = 0.88*max(df_in[[y_in]]),
+             label = fit_eq, color = "#000000", size = 6, parse = TRUE)
   print(linreg_txt)
   ##return handles to both plots
   return(list(linreg, linreg_txt))}
@@ -82,6 +82,6 @@ diff_vdp_fev1ofvc <- linreg_plt(new_df, "VDP_Diff", "FEV1oFVC_Diff", "FEV1/FVC (
 
 
 # Save the plot as a png file in the specified directory
-ggsave("./zR_plots_4ppr/vdp_N4_keyhole_linreg_plain.png", plot = linreg_vdp, width = 4.5, height = 3.7, dpi = 300)
-ggsave("./zR_plots_4ppr/vdp_N4_keyhole_linreg_p.png", plot = linreg_vdp_txt, width = 4.5, height = 3.7, dpi = 300)
+ggsave("./zR_plots_4ppr/base_N4vdp_fev1_linreg_plain.png", plot = base_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./zR_plots_4ppr/base_N4vdp_fev1_linreg_p.png", plot = base_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
 
