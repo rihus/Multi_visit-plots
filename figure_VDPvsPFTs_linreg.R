@@ -11,7 +11,8 @@ setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/Confs_Courses_talks_pprs")
 
 ###########Regression line plot function
 linreg_plt <- function(df_in, x_in, y_in, y_label, x_label, x_lim = c(0, 40),
-                       y_lim = c(50, 150), corrltn_method = "pearson") {
+                       y_lim = c(50, 150), corrltn_method = "pearson",
+                       xlbl_pos_fctr=0.3, ylbl_pos_fctr=0.98) {
   # Check if correlation method is valid
   if (!corrltn_method %in% c("pearson", "spearman")) {
     stop("Only pearson or spearman correlations accepted.") }
@@ -46,8 +47,8 @@ linreg_plt <- function(df_in, x_in, y_in, y_label, x_label, x_lim = c(0, 40),
   # Add correlation coefficient and equation to the plot
   linreg_txt <- linreg + ggpubr::stat_cor(p.accuracy = 0.001, method = corrltn_method,
                      aes(label = paste(after_stat(rr.label), after_stat(p.label), sep = "~`,`~")),
-                     label.x = 0.3*max(df_in[[x_in]]), label.y = 0.98*max(df_in[[y_in]]), size = 6) +
-    annotate("text", x = 0.65*max(df_in[[x_in]]), y = 0.88*max(df_in[[y_in]]),
+                     label.x = xlbl_pos_fctr*max(df_in[[x_in]]), label.y = ylbl_pos_fctr*max(df_in[[y_in]]), size = 6) +
+    annotate("text", x = 2.5*xlbl_pos_fctr*max(df_in[[x_in]]), y = 0.92*ylbl_pos_fctr*max(df_in[[y_in]]),
              label = fit_eq, color = "#000000", size = 6, parse = TRUE)
   print(linreg_txt)
   ##return handles to both plots
@@ -58,30 +59,60 @@ linreg_plt <- function(df_in, x_in, y_in, y_label, x_label, x_lim = c(0, 40),
 new_df <- read.csv("./Riaz_CF_multi_visit_ppr/IRC740H_N4VDP_PFTs_2visits.csv")
 
 base_vdp_fev1 <- linreg_plt(new_df, "VDP_B", "FEV1_B", "FEV1 (%)", "VDP (%)",
-                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson",
+                       xlbl_pos_fctr=0.3, ylbl_pos_fctr=0.99)
 base_vdp_fvc <- linreg_plt(new_df, "VDP_B", "FVC_B", "FVC (%)", "VDP (%)",
-                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson",
+                       xlbl_pos_fctr=0.3, ylbl_pos_fctr=0.99)
 base_vdp_fev1ofvc <- linreg_plt(new_df, "VDP_B", "FEV1oFVC_B", "FEV1/FVC (%)", "VDP (%)",
-                           x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="pearson")
+                           x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="pearson",
+                           xlbl_pos_fctr=0.3, ylbl_pos_fctr=1)
 
 
 yr1_vdp_fev1 <- linreg_plt(new_df, "VDP_Y1", "FEV1_Y1", "FEV1 (%)", "VDP (%)",
-                            x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                           x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson",
+                           xlbl_pos_fctr=0.3, ylbl_pos_fctr=0.99)
 yr1_vdp_fvc <- linreg_plt(new_df, "VDP_Y1", "FVC_Y1", "FVC (%)", "VDP (%)",
-                           x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                          x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson",
+                          xlbl_pos_fctr=0.3, ylbl_pos_fctr=0.99)
 yr1_vdp_fev1ofvc <- linreg_plt(new_df, "VDP_Y1", "FEV1oFVC_Y1", "FEV1/FVC (%)", "VDP (%)",
-                                x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="pearson")
+                               x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="pearson",
+                               xlbl_pos_fctr=0.3, ylbl_pos_fctr=1)
 
 
 diff_vdp_fev1 <- linreg_plt(new_df, "VDP_Diff", "FEV1_Diff", "FEV1 (%)", "VDP (%)",
-                           x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="pearson")
+                           x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="pearson",
+                           xlbl_pos_fctr=-0.1, ylbl_pos_fctr=2)
 diff_vdp_fvc <- linreg_plt(new_df, "VDP_Diff", "FVC_Diff", "FVC (%)", "VDP (%)",
-                          x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="pearson")
+                          x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="pearson",
+                          xlbl_pos_fctr=-0.1, ylbl_pos_fctr=2)
 diff_vdp_fev1ofvc <- linreg_plt(new_df, "VDP_Diff", "FEV1oFVC_Diff", "FEV1/FVC (%)", "VDP (%)",
-                               x_lim=c(-10, 20), y_lim=c(-25, 25), corrltn_method="pearson")
+                               x_lim=c(-10, 20), y_lim=c(-25, 25), corrltn_method="pearson",
+                               xlbl_pos_fctr=-0.1, ylbl_pos_fctr=2)
 
 
-# Save the plot as a png file in the specified directory
-ggsave("./zR_plots_4ppr/base_N4vdp_fev1_linreg_plain.png", plot = base_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./zR_plots_4ppr/base_N4vdp_fev1_linreg_p.png", plot = base_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
+# #Save the plot as a png file in the specified directory
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/base_N4vdp_fev1_linreg_plain.png", plot = base_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/base_N4vdp_fev1_linreg_p.png", plot = base_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/base_N4vdp_fvc_linreg_plain.png", plot = base_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/base_N4vdp_fvc_linreg_p.png", plot = base_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/base_N4vdp_fev1ofvc_linreg_plain.png", plot = base_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/base_N4vdp_fev1ofvc_linreg_p.png", plot = base_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/yr1_N4vdp_fev1_linreg_plain.png", plot = yr1_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/yr1_N4vdp_fev1_linreg_p.png", plot = yr1_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/yr1_N4vdp_fvc_linreg_plain.png", plot = yr1_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/yr1_N4vdp_fvc_linreg_p.png", plot = yr1_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/yr1_N4vdp_fev1ofvc_linreg_plain.png", plot = yr1_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/yr1_N4vdp_fev1ofvc_linreg_p.png", plot = yr1_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/diff_N4vdp_fev1_linreg_plain.png", plot = diff_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/diff_N4vdp_fev1_linreg_p.png", plot = diff_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/diff_N4vdp_fvc_linreg_plain.png", plot = diff_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/diff_N4vdp_fvc_linreg_p.png", plot = diff_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/diff_N4vdp_fev1ofvc_linreg_plain.png", plot = diff_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Riaz_CF_analysis_comparison_ppr/zR_plots_4ppr/diff_N4vdp_fev1ofvc_linreg_p.png", plot = diff_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+
+
+
 
