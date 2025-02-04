@@ -15,25 +15,70 @@ setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/Confs_Courses_talks_pprs")
 data <- read.csv("./Riaz_CF_multi_visit_ppr/IRC740H_N4VDP_PFTs_2visits.csv")
 
 # Age
-age_test <- wilcox.test(data$Age_scan1[[Sex=="M"]],
-                        data$Age_scan1[[Sex=="F"]], paired = TRUE)
-fe1_p_value <- fe1_test$p.value
+age_test <- wilcox.test(data$Age_scan1[data$Sex == "M"], data$Age_scan1[data$Sex == "F"],
+                        paired = FALSE)
+age_test <- age_test$p.value
+print(age_test)
 
-# FEV1
-fe1_test <- wilcox.test(data$FEV1_B, data$FEV1_Y1, paired = TRUE)
-fe1_p_value <- fe1_test$p.value
+# #FEV1
+fe1_test <- wilcox.test(data$FEV1_B[data$Sex == "M"], data$FEV1_B[data$Sex == "F"],
+                        paired = FALSE)
+fe1b_p <- fe1_test$p.value
 
-# VDP
-vdp_test <- wilcox.test(data$VDP_B, data$VDP_Y1, paired = TRUE)
-vdp_p_value <- vdp_test$p.value
+fe1_test <- wilcox.test(data$FEV1_Y1[data$Sex == "M"], data$FEV1_Y1[data$Sex == "F"],
+                        paired = FALSE)
+fe1y1_p <- fe1_test$p.value
+
+fe1_test <- wilcox.test(data$FEV1_Diff[data$Sex == "M"], data$FEV1_Diff[data$Sex == "F"],
+                        paired = FALSE)
+fe1_test <- fe1_test$p.value
+print(fe1_test)
+
+# #VDP
+vdp_test <- wilcox.test(data$VDP_B[data$Sex == "M"], data$VDP_B[data$Sex == "F"],
+                        paired = FALSE)
+vdpb_p <- vdp_test$p.value
+
+vdp_test <- wilcox.test(data$VDP_Y1[data$Sex == "M"], data$VDP_Y1[data$Sex == "F"],
+                        paired = FALSE)
+vdpy1_p <- vdp_test$p.value
+
+vdp_test <- wilcox.test(data$VDP_Diff[data$Sex == "M"], data$VDP_Diff[data$Sex == "F"],
+                        paired = FALSE)
+vdp_test <- vdp_test$p.value
+
+vdp_test <- wilcox.test(data$VDP_Diff[data$Sex == "M"], data$VDP_Diff[data$Sex == "F"],
+                        paired = FALSE)
+vdp_test <- vdp_test$p.value
+print(vdp_test)
 
 # FVC
-fvc_test <- wilcox.test(data$FVC_B, data$FVC_Y1, paired = TRUE)
-fvc_p_value <- fvc_test$p.value
+fvc_test <- wilcox.test(data$FVC_B[data$Sex == "M"], data$FVC_B[data$Sex == "F"],
+                        paired = FALSE)
+fvcb_p <- fvc_test$p.value
+
+fvc_test <- wilcox.test(data$FVC_Y1[data$Sex == "M"], data$FVC_Y1[data$Sex == "F"],
+                        paired = FALSE)
+fvcy1_p <- fvc_test$p.value
+
+fvc_test <- wilcox.test(data$FVC_Diff[data$Sex == "M"], data$FVC_Diff[data$Sex == "F"],
+                        paired = FALSE)
+fvc_test <- fvc_test$p.value
+print(fvc_test)
 
 # FEV1/FVC
-fev1_fvc_test <- wilcox.test(data$FEV1oFVC_B, data$FEV1oFVC_Y1, paired = TRUE)
-fev1_fvc_p_value <- fev1_fvc_test$p.value
+fe1fvc_test <- wilcox.test(data$FEV1oFVC_B[data$Sex == "M"], data$FEV1oFVC_B[data$Sex == "F"],
+                        paired = FALSE)
+fe1fvcb_p <- fe1fvc_test$p.value
+
+fe1fvc_test <- wilcox.test(data$FEV1oFVC_Y1[data$Sex == "M"], data$FEV1oFVC_Y1[data$Sex == "F"],
+                        paired = FALSE)
+fe1fvcy1_p <- fe1fvc_test$p.value
+
+fe1fvc_test <- wilcox.test(data$FEV1oFVC_Diff[data$Sex == "M"], data$FEV1oFVC_Diff[data$Sex == "F"],
+                        paired = FALSE)
+fe1fvc_test <- fe1fvc_test$p.value
+print(fe1fvc_test)
 
 # Prepare data for plotting
 data_long <- data %>%
