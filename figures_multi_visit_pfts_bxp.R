@@ -83,7 +83,14 @@ df_2visits <- combined_pfts_cf %>%
   ungroup() %>%
   filter(VISIT %in% c("Baseline", "Year 1")) %>%
   filter(Subject_id != "IRC740H-021") #%>%  ##Removed: Not on modulator therapy
- # filter(Subject_id != "IRC740H-024")      ##Removed: Modulator therapy status unknown
+  # filter(Subject_id != "IRC740H-008") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-014") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-022") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-023") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-024") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-025") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-027") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-028")         ##Removed: FEV1 < 90%
 
 ##Get data for all participants with 3 visits
 df_3visits <- combined_pfts_cf %>%
@@ -159,7 +166,7 @@ vdp_bxp_nop <- ggpaired(df_2o3_visits_N4, x = "VISIT", y = "VDP", fill = "VISIT"
         axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1))
 vdp_bxp_nop
 # Save the plot as a png file in the specified directory
-ggsave("./zR_plots_4ppr/vdp_N4_2o3visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 4.5, height = 3.7, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/vdp_N4_2visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 4.5, height = 3.7, dpi = 300)
 
 ################################################
 # #Box plots with p-values VDP - FA
@@ -178,7 +185,7 @@ vdp_bxp_nop <- ggpaired(df_2o3_visits_FA, x = "VISIT", y = "VDP", fill = "VISIT"
         axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1))
 vdp_bxp_nop
 # Save the plot as a png file in the specified directory
-ggsave("./zR_plots_4ppr/vdp_FA_2o3visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 4.5, height = 3.7, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/vdp_FA_2o3visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 4.5, height = 3.7, dpi = 300)
 
 
 
