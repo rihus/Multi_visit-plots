@@ -85,15 +85,15 @@ vdp_2visits <- combined_spir_data %>%
   filter(all(c("Baseline", "Year 1") %in% VISIT)) %>%
   ungroup() %>%
   filter(VISIT %in% c("Baseline", "Year 1")) %>%
-  filter(Subject_id != "IRC740H-021") %>%  ##Removed: Not on modulator therapy
-  filter(Subject_id != "IRC740H-008") %>%     ##Removed: FEV1 < 90%
-  filter(Subject_id != "IRC740H-014") %>%     ##Removed: FEV1 < 90%
-  filter(Subject_id != "IRC740H-022") %>%     ##Removed: FEV1 < 90%
-  filter(Subject_id != "IRC740H-023") %>%     ##Removed: FEV1 < 90%
-  filter(Subject_id != "IRC740H-024") %>%     ##Removed: FEV1 < 90%
-  filter(Subject_id != "IRC740H-025") %>%     ##Removed: FEV1 < 90%
-  filter(Subject_id != "IRC740H-027") %>%     ##Removed: FEV1 < 90%
-  filter(Subject_id != "IRC740H-028")         ##Removed: FEV1 < 90%
+  filter(Subject_id != "IRC740H-021") #%>%  ##Removed: Not on modulator therapy
+  # filter(Subject_id != "IRC740H-008") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-014") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-022") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-023") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-024") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-025") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-027") %>%     ##Removed: FEV1 < 90%
+  # filter(Subject_id != "IRC740H-028")         ##Removed: FEV1 < 90%
 
 vdp_2visits_N4 <- vdp_2visits[vdp_2visits$Correction == "N4", ]
 vdp_2visits_FA <- vdp_2visits[vdp_2visits$Correction == "FA", ]
