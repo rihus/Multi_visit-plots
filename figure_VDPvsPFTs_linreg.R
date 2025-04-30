@@ -119,53 +119,53 @@ linreg_plt <- function(df_in, x_in, y_in, y_label, x_label, x_lim = c(0, 40),
 }
 ################################################################################
 # ##Load the data from both CSV files and arrange it to plot
-new_df <- read.csv("./Riaz_CF_multi_visit_ppr/IRC740H_N4VDP_PFTs_2visits.csv")
+new_df <- read.csv("./Papers/Riaz_CF_multi_visit_ppr/IRC740H_N4VDP_PFTs_2visits.csv")
 
 base_vdp_fev1 <- linreg_plt(new_df, "VDP_B", "FEV1_B", "FEV1 (%)", "VDP (%)",
-                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="spearman")
 base_vdp_fvc <- linreg_plt(new_df, "VDP_B", "FVC_B", "FVC (%)", "VDP (%)",
-                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                       x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="spearman")
 base_vdp_fev1ofvc <- linreg_plt(new_df, "VDP_B", "FEV1oFVC_B", "FEV1/FVC (%)", "VDP (%)",
-                           x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="pearson")
+                           x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="spearman")
 
 
 yr1_vdp_fev1 <- linreg_plt(new_df, "VDP_Y1", "FEV1_Y1", "FEV1 (%)", "VDP (%)",
-                           x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                           x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="spearman")
 yr1_vdp_fvc <- linreg_plt(new_df, "VDP_Y1", "FVC_Y1", "FVC (%)", "VDP (%)",
-                          x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="pearson")
+                          x_lim=c(0, 30), y_lim=c(50, 140), corrltn_method="spearman")
 yr1_vdp_fev1ofvc <- linreg_plt(new_df, "VDP_Y1", "FEV1oFVC_Y1", "FEV1/FVC (%)", "VDP (%)",
-                               x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="pearson")
+                               x_lim=c(0, 30), y_lim=c(60, 100), corrltn_method="spearman")
 
 
 diff_vdp_fev1 <- linreg_plt(new_df, "VDP_Diff", "FEV1_Diff", "\u394 FEV1 (%)", "\u394 VDP (%)",
-                           x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="pearson")
+                           x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="spearman")
 diff_vdp_fvc <- linreg_plt(new_df, "VDP_Diff", "FVC_Diff", "\u394 FVC (%)", "\u394 VDP (%)",
-                          x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="pearson")
+                          x_lim=c(-10, 20), y_lim=c(-40, 30), corrltn_method="spearman")
 diff_vdp_fev1ofvc <- linreg_plt(new_df, "VDP_Diff", "FEV1oFVC_Diff", "\u394 FEV1/FVC (%)", "\u394 VDP (%)",
-                               x_lim=c(-10, 20), y_lim=c(-25, 25), corrltn_method="pearson")
+                               x_lim=c(-10, 20), y_lim=c(-25, 25), corrltn_method="spearman")
 
 
 # #Save the plot as a png file in the specified directory
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1_linreg_plain.png", plot = base_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1_linreg_p.png", plot = base_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fvc_linreg_plain.png", plot = base_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fvc_linreg_p.png", plot = base_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1ofvc_linreg_plain.png", plot = base_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1ofvc_linreg_p.png", plot = base_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1_linreg_plain.png", plot = base_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1_linreg_p.png", plot = base_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fvc_linreg_plain.png", plot = base_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fvc_linreg_p.png", plot = base_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1ofvc_linreg_plain.png", plot = base_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/base_N4vdp_fev1ofvc_linreg_p.png", plot = base_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
 
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1_linreg_plain.png", plot = yr1_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1_linreg_p.png", plot = yr1_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fvc_linreg_plain.png", plot = yr1_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fvc_linreg_p.png", plot = yr1_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1ofvc_linreg_plain.png", plot = yr1_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1ofvc_linreg_p.png", plot = yr1_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1_linreg_plain.png", plot = yr1_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1_linreg_p.png", plot = yr1_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fvc_linreg_plain.png", plot = yr1_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fvc_linreg_p.png", plot = yr1_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1ofvc_linreg_plain.png", plot = yr1_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/yr1_N4vdp_fev1ofvc_linreg_p.png", plot = yr1_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
 
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1_linreg_plain.png", plot = diff_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1_linreg_p.png", plot = diff_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fvc_linreg_plain.png", plot = diff_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fvc_linreg_p.png", plot = diff_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1ofvc_linreg_plain.png", plot = diff_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
-ggsave("./Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1ofvc_linreg_p.png", plot = diff_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1_linreg_plain.png", plot = diff_vdp_fev1[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1_linreg_p.png", plot = diff_vdp_fev1[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fvc_linreg_plain.png", plot = diff_vdp_fvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fvc_linreg_p.png", plot = diff_vdp_fvc[[2]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1ofvc_linreg_plain.png", plot = diff_vdp_fev1ofvc[[1]], width = 4.5, height = 3.7, dpi = 300)
+ggsave("./Papers/Riaz_CF_multi_visit_ppr/zR_plots_4ppr/diff_N4vdp_fev1ofvc_linreg_p.png", plot = diff_vdp_fev1ofvc[[2]], width = 4.5, height = 3.7, dpi = 300)
 
 
 
