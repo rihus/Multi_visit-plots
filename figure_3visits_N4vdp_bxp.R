@@ -1,0 +1,71 @@
+#load ggplot2
+library(ggplot2)
+library(ggpubr)
+library(blandr)
+library(dplyr)
+library(tidyr)
+library(rstatix)
+
+#Set the working directory to the path where your CSV files are located
+setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/all_projects_data_work/vdp_analysis/CFNonCF_Bronch/IRC740H_2Dspiral_CF")
+# linetypes: 0 = blank, 1 = solid, 2 = dashed, 3 = dotted, 4 = dotdash, 5 = longdash, 6 = twodash
+
+################################################################################
+# ##Load the data from both CSV files and arrange it to plot
+N4corr_spir_cf <- read.csv("./vdp_results_September2025_visits/N4_corr_glb-mean_analysis_results.csv")
+
+##Get data for all participants with 3 visits
+vdpN4_3visits <- N4corr_spir_cf %>%
+  group_by(Subject_id) %>%
+  filter(all(c("Baseline", "Follow-up 1", "Follow-up 2") %in% VISIT)) %>%
+  ungroup() %>%
+  filter(VISIT %in% c("Baseline", "Follow-up 1", "Follow-up 2")) %>%
+  filter(Subject_id != "IRC740H-021")
+
+##Get data for all participants with 2 or 3 visits
+vdpN4_2o3_visits <- N4corr_spir_cf %>%
+  group_by(Subject_id) %>%
+  filter(all(c("Baseline", "Follow-up 1") %in% VISIT)) %>%
+  filter(any(c("Follow-up 2") %in% VISIT) | VISIT %in% c("Baseline", "Follow-up 1")) %>%
+  ungroup() %>%
+  filter(VISIT %in% c("Baseline", "Follow-up 1", "Follow-up 2")) %>%
+  filter(Subject_id != "IRC740H-021")
+
+###############################################Both 2 and 3 visits
+
+y_label <- expression(bold(VDP[N4] * " (%)"))
+# #Box plots with p-values VDP - N4
+vdp_bxp_nop <- ggpaired(vdpN4_2o3_visits, x = "VISIT", y = "VDP", fill = "VISIT",
+                        palette = c("#b44582", "#cc79a7", "#e1b0cb"), id = "Subject_id", width = 0.5,
+                        ylim = c(0, 40), line.color = "black", line.size = 0.5,
+                        legend = "none", xlab = "") +
+  ylab(y_label) +
+  theme(panel.border = element_rect(color = "#000000", fill = NA, linewidth = 1),
+        axis.text = element_text(size = 22, color = "#000000", face = "bold"),
+        axis.title = element_text(size = 22, color = "#000000", face = "bold"),
+        axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1))
+print(vdp_bxp_nop)
+# Save the plot as a png file in the specified directory
+ggsave("./zR_plots/vdp_N4_2o3visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 7.5, height = 5.2, dpi = 300)
+
+
+###############################################3 visits
+friedman_result <- friedman.test(VDP ~ VISIT | Subject_id, data = vdpN4_3visits)
+friedman_p <- signif(friedman_result$p.value, 3)
+# #Box plots with p-values VDP - N4
+vdp_bxp_nop <- ggpaired(vdpN4_3visits, x = "VISIT", y = "VDP", fill = "VISIT",
+                        palette = c("#b44582", "#cc79a7", "#e1b0cb"), id = "Subject_id", width = 0.5,
+                        ylim = c(0, 40), line.color = "black", line.size = 0.5,
+                        legend = "none", xlab = "") +
+  ylab(y_label) +
+  theme(panel.border = element_rect(color = "#000000", fill = NA, linewidth = 1),
+        axis.text = element_text(size = 22, color = "#000000", face = "bold"),
+        axis.title = element_text(size = 22, color = "#000000", face = "bold"),
+        axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1)) +
+        annotate("text", x = 2, y = 39, label = paste("Friedman p =", friedman_p),
+                  size = 6, fontface = "bold")
+print(vdp_bxp_nop)
+
+# Save the plot as a png file in the specified directory
+ggsave("./zR_plots/vdp_N4_3visits_cbxp_p.png", plot = vdp_bxp_nop, width = 7.5, height = 5.2, dpi = 300)
+
