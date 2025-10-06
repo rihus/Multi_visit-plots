@@ -82,10 +82,11 @@ combined_spir_data <- rbind(transform(N4corr_spir_cf, Correction = "N4", Categor
 ##Get data for all participants with 2 visits
 vdp_2visits <- combined_spir_data %>%
   group_by(Subject_id) %>%
-  filter(all(c("Baseline", "Year 1") %in% VISIT)) %>%
+  filter(all(c("Baseline", "Follow-up") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Baseline", "Year 1")) %>%
-  filter(Subject_id != "IRC740H-021") #%>%  ##Removed: Not on modulator therapy
+  filter(VISIT %in% c("Baseline", "Follow-up")) %>%
+  filter(Subject_id != "IRC740H-021") # %>%  ##Removed: Not on modulator therapy
+  # filter(Subject_id != "IRC740H-002") %>%  ##Removed to check if still significant with remaining
   # filter(Subject_id != "IRC740H-008") %>%     ##Removed: FEV1 < 90%
   # filter(Subject_id != "IRC740H-014") %>%     ##Removed: FEV1 < 90%
   # filter(Subject_id != "IRC740H-022") %>%     ##Removed: FEV1 < 90%
@@ -102,17 +103,16 @@ vdp_2visits_FA <- vdp_2visits[vdp_2visits$Correction == "FA", ]
 ##Get data for all participants with 3 visits
 vdp_3visits <- combined_spir_data %>%
   group_by(Subject_id) %>%
-  filter(all(c("Baseline", "Year 1", "Year 2") %in% VISIT)) %>%
+  filter(all(c("Baseline", "Follow-up", "Year 2") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Baseline", "Year 1", "Year 2")) %>%
+  filter(VISIT %in% c("Baseline", "Follow-up", "Year 2")) %>%
   filter(Subject_id != "IRC740H-021")
-
 vdp_3visits_N4 <- vdp_3visits[vdp_3visits$Correction == "N4", ]
 vdp_3visits_FA <- vdp_3visits[vdp_3visits$Correction == "FA", ]
 
 # ##One visit only participants
 # df_1visist <- combined_spir_data %>%
-#   filter(VISIT %in% c("Baseline", "Year 1")) %>%
+#   filter(VISIT %in% c("Baseline", "Follow-up")) %>%
 #   group_by(Subject_id) %>%
 #   filter(n() == 2) %>%
 #   ungroup()
@@ -150,8 +150,8 @@ hvp_n4_bxp_p <- calc_add_p(vdp_2visits_N4, "VISIT", "HVP", hvp_n4_bxp_nop,
                            30, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 # Save the plot as a png file in the specified directory
-ggsave("./zR_plots_4ppr/figs_multi_visit/vdp_N4_2visits_cbxp_nop.png", plot = vdp_n4_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/figs_multi_visit/vdp_N4_2visits_cbxp_p.png", plot = vdp_n4_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/vdp_N4_2visits_cbxp_nop_FEV1gt90_N15.png", plot = vdp_n4_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/vdp_N4_2visits_cbxp_p_FEV1gt90_N15.png", plot = vdp_n4_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
 ggsave("./zR_plots_4ppr/figs_multi_visit/lvp_N4_2visits_cbxp_nop.png", plot = lvp_n4_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
 ggsave("./zR_plots_4ppr/figs_multi_visit/lvp_N4_2visits_cbxp_p.png", plot = lvp_n4_bxp_p, width = 4.5, height = 3.8, dpi = 300)
