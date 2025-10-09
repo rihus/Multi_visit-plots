@@ -7,7 +7,7 @@ library(tidyr)
 library(rstatix)
 
 #Set the working directory to the path where your CSV files are located
-setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/Confs_Courses_talks_pprs")
+setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/Confs_Courses_talks_pprs/Papers")
 # linetypes: 0 = blank, 1 = solid, 2 = dashed, 3 = dotted, 4 = dotdash, 5 = longdash, 6 = twodash
 
 ################################################################################
