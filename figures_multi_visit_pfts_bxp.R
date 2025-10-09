@@ -62,8 +62,8 @@ calc_add_p <- function(data_in, x_var, y_var, fig_handle, py_pos,
                        tst = "wilcox", paird = TRUE, addp_eq=FALSE) {
   p_thresh <- calc_pval(data_in, x_var, y_var, tst, paird)
   p_thresh <- p_thresh %>% add_xy_position(x = x_var)
-  if (addp_eq == TRUE) {plabel = "P={scales::pvalue(p)}"}
-  else {plabel = "P{scales::pvalue(p)}"}
+  if (addp_eq == TRUE) {plabel = "P={scales::pvalue(p, accuracy = 0.01)}"}
+  else {plabel = "P{scales::pvalue(p, accuracy = 0.001))}"}
   bxp_p <- fig_handle + stat_pvalue_manual(p_thresh, label = plabel,
                                            y.position = py_pos, label.size = 8,
                                            bracket.size = 0.8,
@@ -79,9 +79,9 @@ combined_pfts_cf <- read.csv("./IRC740H_2Dspiral_CF/vdp_hvp_results_August2024_v
 ##Get data for all participants with 2 visits
 df_2visits <- combined_pfts_cf %>%
   group_by(Subject_id) %>%
-  filter(all(c("Baseline", "Year 1") %in% VISIT)) %>%
+  filter(all(c("Baseline", "Follow-up") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Baseline", "Year 1")) %>%
+  filter(VISIT %in% c("Baseline", "Follow-up")) %>%
   filter(Subject_id != "IRC740H-021") %>%  ##Removed: Not on modulator therapy
   filter(Subject_id != "IRC740H-008") %>%     ##Removed: FEV1 < 90%
   filter(Subject_id != "IRC740H-014") %>%     ##Removed: FEV1 < 90%
@@ -95,28 +95,28 @@ df_2visits <- combined_pfts_cf %>%
 ##Get data for all participants with 3 visits
 df_3visits <- combined_pfts_cf %>%
   group_by(Subject_id) %>%
-  filter(all(c("Baseline", "Year 1", "Year 2") %in% VISIT)) %>%
+  filter(all(c("Baseline", "Follow-up", "Year 2") %in% VISIT)) %>%
   ungroup() %>%
-  filter(VISIT %in% c("Baseline", "Year 1", "Year 2")) %>%
+  filter(VISIT %in% c("Baseline", "Follow-up", "Year 2")) %>%
   filter(Subject_id != "IRC740H-021")
 
 ###############################################2 visits
 # #Box plots with p-values
 fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FVC", id = "Subject_id",
                              c(70, 150), palette = c("coral4", "coral1"),
-                             xlab = "", ylab = "%Pred FVC (%)")
+                             xlab = "", ylab = expression(bold(Pred*" "*FVC*" "* "(%)")))
 fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FVC", fvc_bxp_nop,
                         140, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 fev1_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1", id = "Subject_id",
                              c(70, 150), palette = c("chocolate4", "chocolate1"),
-                             xlab = "", ylab = "%Pred FEV1 (%)")
+                             xlab = "", ylab = expression(bold(Pred*" "*FEV[1]*" "* "(%)")))
 fev1_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1", fev1_bxp_nop,
                         140, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
 r_fev1fvc_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEV1_FVC", id = "Subject_id",
                               c(70, 130), palette = c("indianred4", "indianred1"),
-                              xlab = "", ylab = "ppFEV1/FVC (%)")
+                              xlab = "", ylab = expression(bold(Pred*" "*FEV[1]/FVC*" "* "(%)")))
 r_fev1fvc_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEV1_FVC", r_fev1fvc_bxp_nop,
                          120, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
@@ -126,15 +126,17 @@ r_fef2575_bxp_nop <- connected_bxp(df_2visits, "VISIT", "pp_FEF25_75", id = "Sub
 r_fef2575_bxp_p <- calc_add_p(df_2visits, "VISIT", "pp_FEF25_75", r_fef2575_bxp_nop,
                               190, tst = "wilcox", paird = TRUE, addp_eq=TRUE)
 
+# ylabel=expression(bold(Reader* " " *VDP* " "* "(%)")
+# gt90_
 # Save the plots as a png file in the specified directory
-ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fvc_2visits_cbxp_nop.png", plot = fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fvc_2visits_cbxp_p.png", plot = fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/gt90_pfts_fvc_2visits_cbxp_nop.png", plot = fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/gt90_pfts_fvc_2visits_cbxp_p.png", plot = fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
-ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1_2visits_cbxp_nop.png", plot = fev1_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1_2visits_cbxp_p.png", plot = fev1_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/gt90_pfts_fev1_2visits_cbxp_nop.png", plot = fev1_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/gt90_pfts_fev1_2visits_cbxp_p.png", plot = fev1_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
-ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1fvc_ratio_2visits_cbxp_nop.png", plot = r_fev1fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
-ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fev1fvc_ratio_2visits_cbxp_p.png", plot = r_fev1fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/gt90_pfts_fev1fvc_ratio_2visits_cbxp_nop.png", plot = r_fev1fvc_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
+ggsave("./zR_plots_4ppr/figs_multi_visit/gt90_pfts_fev1fvc_ratio_2visits_cbxp_p.png", plot = r_fev1fvc_bxp_p, width = 4.5, height = 3.8, dpi = 300)
 
 ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fef2575_ratio_2visits_cbxp_nop.png", plot = r_fef2575_bxp_nop, width = 4.5, height = 3.8, dpi = 300)
 ggsave("./zR_plots_4ppr/figs_multi_visit/pfts_fef2575_ratio_2visits_cbxp_p.png", plot = r_fef2575_bxp_p, width = 4.5, height = 3.8, dpi = 300)
