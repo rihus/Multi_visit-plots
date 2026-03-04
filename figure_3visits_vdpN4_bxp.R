@@ -8,12 +8,12 @@ library(rstatix)
 library(PMCMRplus)
 
 #Set the working directory to the path where your CSV files are located
-setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/all_projects_data_work/vdp_analysis/CFNonCF_Bronch")
+setwd("C:/Users/HUSDQ4/OneDrive - cchmc/cincy_work/all_projects_data_work/vdp_analysis/CFNonCF_Bronch/IRC740H_2Dspiral_CF")
 # linetypes: 0 = blank, 1 = solid, 2 = dashed, 3 = dotted, 4 = dotdash, 5 = longdash, 6 = twodash
 
 ################################################################################
 # ##Load the data from both CSV files and arrange it to plot
-N4corr_spir_cf <- read.csv("./IRC740H_2Dspiral_CF/vdpN4_results_February2026_visits/N4_corr_glb-mean_analysis_results.csv")
+N4corr_spir_cf <- read.csv("./vdpN4_results_February2026_visits/N4_corr_glb-mean_analysis_results.csv")
 
 combined_spir_data <- rbind(transform(N4corr_spir_cf, Correction = "N4", Category = "CF"))
 
@@ -28,24 +28,30 @@ vdp_3visits <- combined_spir_data %>%
 vdp_3visits_N4 <- vdp_3visits[vdp_3visits$Correction == "N4", ]
 
 ###############################################3 visits
-# #Box plots with p-values VDP - N4
-vdp_bxp_nop <- ggpaired(vdp_3visits_N4, x = "VISIT", y = "VDP", fill = "VISIT",
+# #Box plots with p-values VDP
+
+friedman_result <- friedman.test(VDP ~ VISIT | Subject_id, data = vdp_3visits_N4)
+friedman_p <- signif(friedman_result$p.value, 3)
+y_label <- expression(bold(VDP * " (%)"))
+
+vdp_bxp_p <- ggpaired(vdp_3visits_N4, x = "VISIT", y = "VDP", fill = "VISIT",
                         palette = c("#b44582", "#cc79a7", "#e1b0cb"), id = "Subject_id", width = 0.5,
-                        ylim = c(0, 40), line.color = "black", line.size = 0.5,
+                        ylim = c(0, 30), line.color = "black", line.size = 0.5,
                         legend = "none", xlab = "") +
   ylab(y_label) +
   theme(panel.border = element_rect(color = "#000000", fill = NA, linewidth = 1),
         axis.text = element_text(size = 22, color = "#000000", face = "bold"),
         axis.title = element_text(size = 22, color = "#000000", face = "bold"),
-        axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1))
-vdp_bxp_nop
+        axis.line.x = element_line(linewidth = 1), axis.line.y = element_line(linewidth = 1)) +
+        annotate("text", x = 2, y = 28, label = paste("Friedman p =", friedman_p),
+                 size = 6, fontface = "bold")
+print(vdp_bxp_p)
 
-friedman.test(VDP ~ VISIT | Subject_id, data = vdp_3visits_N4)
 ##If Friedman is significant, perform post-hoc Nemenyi
 frdAllPairsNemenyiTest(VDP ~ VISIT | Subject_id, data = vdp_3visits_N4)
 
 # Save the plot as a png file in the specified directory
-ggsave("./zR_plots/vdp_N4_3visits_cbxp_nop.png", plot = vdp_bxp_nop, width = 4.5, height = 3.7, dpi = 300)
+ggsave("./zR_plots/vdpN4_3visits_cbxp_p.png", plot = vdp_bxp_p, width = 7.5, height = 5.2, dpi = 300)
 
 
 ##Get data for all participants with 2 or 3 visits
